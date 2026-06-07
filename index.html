@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Le Festin du Bénin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════════════════ */
+:root {
+  --noir:    #0e0b07;
+  --brun:    #1e1509;
+  --or:      #c8922a;
+  --or-clair:#e8b86d;
+  --creme:   #faf6ef;
+  --beige:   #f0e8d8;
+  --texte:   #3a2e1e;
+  --gris:    #7a6a54;
+  --rouge:   #8b2500;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--creme);
+  color: var(--texte);
+  overflow-x: hidden;
+}
+img { display:block; max-width:100%; }
+button { cursor:pointer; font-family:'Outfit',sans-serif; }
+
+/* ═══════════════════════════════════════════
+   PRO NAVBAR (Horizontale Flottante)
+═══════════════════════════════════════════ */
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    background: rgba(30, 21, 9, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    z-index: 1000;
+    border: 1px solid rgba(200, 146, 42, 0.2);
+}
+
+.nav-item {
+    position: relative;
+    width: 110px;
+    height: 50px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.1); }
+
+.text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    font-weight: 500;
+    color: #e0e0e0;
+    transition: 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    font-size: 18px;
+    color: var(--or-clair);
+    opacity: 0;
+    transition: 0.3s ease;
+}
+
+@media (hover:hover) {
+    .nav-item:hover .text { opacity: 0; transform: translate(-50%, -150%); }
+    .nav-item:hover .icon { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.nav-item.active { background: rgba(200, 146, 42, 0.2); }
+
+.indicator {
+    position: absolute;
+    bottom: 6px;
+    height: 3px;
+    width: 110px;
+    border-radius: 10px;
+    background: var(--or);
+    transition: all 0.4s cubic-bezier(.68,-0.6,.32,1.6);
+}
+
+/* ═══════════════════════════════════════════
+   PAGES & HEADER DE MARQUE
+═══════════════════════════════════════════ */
+.page { display: none; padding-top: 100px; min-height: 100vh; }
+.page.active { display: block; }
+
+/* Header Logo + Nom (Uniquement sur Accueil) */
+.branding-header {
+    text-align: center;
+    padding: 2rem 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.branding-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+}
+.branding-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--brun);
+    font-weight: 700;
+    line-height: 1;
+}
+.branding-name span { color: var(--or); font-style: italic; }
+
+/* Hero Section */
+.hero {
+  position: relative;
+  min-height: calc(100vh - 300px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 2rem;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(200,146,42,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 30%, rgba(139,37,0,0.1) 0%, transparent 55%),
+    linear-gradient(160deg, #fdfbf7 0%, #f0e8d8 100%);
+  z-index: 0;
+}
+.hero-content { position:relative; z-index:1; max-width:750px; }
+.hero-eyebrow { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: var(--or); margin-bottom: 1.2rem; }
+.hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 700; line-height: 0.95; color: var(--brun); margin-bottom: 0.3rem; }
+.hero h1 em { font-style: italic; color: var(--or); }
+.hero-sub { font-size: clamp(1rem, 2.5vw, 1.3rem); font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gris); margin-bottom: 2.5rem; }
+.hero-cta { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--or); color: #fff; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; padding: 1rem 2.2rem; border-radius: 4px; border: none; transition: all 0.2s; box-shadow: 0 6px 24px rgba(200,146,42,0.35); }
+.hero-cta:hover { background: var(--or-clair); transform: translateY(-2px); }
+
+.features { display: flex; justify-content: center; flex-wrap: wrap; background: var(--brun); border-top: 1px solid rgba(200,146,42,0.15); border-bottom: 1px solid rgba(200,146,42,0.15); }
+.feature { flex: 1; min-width: 200px; padding: 2.2rem 1.5rem; text-align: center; border-right: 1px solid rgba(200,146,42,0.12); }
+.feature-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+.feature h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--or-clair); }
+.feature p { font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+
+/* ═══════════════════════════════════════════
+   NOS REPAS (CATALOGUE)
+═══════════════════════════════════════════ */
+.catalogue-header { background: var(--brun); padding: 4rem 2rem 3rem; text-align:center; color:var(--or-clair); }
+.catalogue-header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,5vw,3.5rem); }
+
+.search-container { max-width: 600px; margin: -25px auto 20px; position: relative; z-index: 10; padding: 0 20px; }
+.search-input { width: 100%; padding: 15px 25px 15px 50px; border-radius: 50px; border: 2px solid var(--or); background: white; outline: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--or); }
+
+.filter-bar { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; padding:1.8rem 1.5rem 0.5rem; }
+.filter-btn { border: 1.5px solid var(--or); background: transparent; color: var(--or); font-size:0.75rem; padding:0.45rem 1.2rem; border-radius:999px; text-transform:uppercase; transition:all 0.2s; }
+.filter-btn.active { background:var(--or); color:#fff; }
+
+.cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1.8rem; padding:2rem 2.5rem 5rem; max-width:1300px; margin:0 auto; }
+.card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.05); transition: 0.3s; }
+.card:hover { transform:translateY(-5px); }
+.card-img { width:100%; aspect-ratio:4/3; overflow:hidden; position:relative; }
+.card-img img { width:100%; height:100%; object-fit:cover; transition: 0.4s; }
+.card:hover .card-img img { transform:scale(1.06); }
+.card-badge { position:absolute; top:10px; right:10px; background:var(--rouge); color:#fff; font-size:0.65rem; padding:3px 10px; border-radius:999px; }
+.card-body { padding:1.2rem; display:flex; flex-direction:column; gap:0.5rem; }
+.card-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; color:var(--brun); }
+.card-desc { font-size:0.85rem; color:var(--gris); line-height:1.5; }
+.card-price { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:var(--or); }
+.btn-order { background:var(--brun); color:var(--or-clair); border:none; padding:0.55rem 1.1rem; border-radius:6px; font-weight:600; transition: 0.2s; }
+.btn-order:hover { background:var(--or); color:#fff; }
+
+/* ═══════════════════════════════════════════
+   CONTACT & MODAL
+═══════════════════════════════════════════ */
+.contact-hero { background:var(--brun); padding:4rem 2rem 3rem; text-align:center; color:var(--or-clair); }
+.contact-body { max-width:1000px; margin:0 auto; padding:4rem 2rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; }
+.contact-item { display:flex; gap:1rem; margin-bottom:1.5rem; }
+.contact-item-icon { width:42px; height:42px; border-radius:50%; background:rgba(200,146,42,0.1); display:flex; align-items:center; justify-content:center; color:var(--or); }
+.map-frame { width:100%; aspect-ratio:4/3; border-radius:12px; border:none; box-shadow:0 8px 32px rgba(0,0,0,0.1); }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(14,11,7,0.8); z-index:2000; align-items:center; justify-content:center; padding:1rem; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--creme); border-radius:16px; max-width:480px; width:100%; padding:2rem; position:relative; }
+.modal-close { position:absolute; top:1rem; right:1.2rem; background:none; border:none; font-size:1.6rem; color:var(--gris); }
+.modal input { width:100%; padding:0.6rem; border:1.5px solid #d9c9b0; border-radius:7px; margin-bottom:0.9rem; }
+.btn-confirm { width:100%; background:var(--brun); color:var(--or-clair); border:none; padding:0.95rem; border-radius:8px; font-weight:600; cursor:pointer; }
+
+.site-footer { background:var(--noir); padding:2.5rem; text-align:center; color:rgba(255,255,255,0.3); font-size:0.8rem; }
+.site-footer span { color:var(--or); }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .contact-body { grid-template-columns:1fr; }
+}
+@media(max-width:600px) {
+    .navbar { width: 90%; }
+    .nav-item { width: 70px; height: 40px; }
+    .indicator { width: 70px; }
+    .text { display: none !important; }
+    .icon { opacity: 1 !important; transform: translate(-50%, -50%) scale(1) !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV BAR HORIZONTALE ═══ -->
+<nav class="navbar">
+    <div class="nav-item active" data-page="accueil" onclick="showPage('accueil')">
+        <span class="text">Accueil</span>
+        <span class="icon"><i class="fa-solid fa-house"></i></span>
+    </div>
+    <div class="nav-item" data-page="catalogue" onclick="showPage('catalogue')">
+        <span class="text">Nos Repas</span>
+        <span class="icon"><i class="fa-solid fa-utensils"></i></span>
+    </div>
+    <div class="nav-item" data-page="contact" onclick="showPage('contact')">
+        <span class="text">Contact</span>
+        <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+    </div>
+    <div class="indicator"></div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     PAGE : ACCUEIL
+═══════════════════════════════════ -->
+<div class="page active" id="page-accueil">
+  
+  <!-- HEADER DE MARQUE -->
+  <header class="branding-header">
+    <img src="https://cdn-icons-png.flaticon.com/512/1830/1830839.png" alt="Logo" class="branding-logo">
+    <h1 class="branding-name">Le Festin <span>du Bénin</span></h1>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">🍽️ Gastronomie Béninoise</div>
+      <h1>L'art de savourer<em>chaque instant</em></h1>
+      <p class="hero-sub">Une cuisine authentique, des saveurs qui racontent l'histoire du Bénin</p>
+      <button class="hero-cta" onclick="showPage('catalogue')">
+        Découvrir nos repas &rarr;
+      </button>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <div class="feature-icon">🌿</div>
+      <h3>Produits Locaux</h3>
+      <p>Ingrédients frais du marché de Dantokpa</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">👨‍🍳</div>
+      <h3>Chef Passionné</h3>
+      <p>Expert en saveurs traditionnelles et modernes</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🚚</div>
+      <h3>Livraison Rapide</h3>
+      <p>Livraison partout dans Cotonou et environs</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© 2024 <span>Le Festin du Bénin</span> · Tous droits réservés</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE : NOS REPAS
+═══════════════════════════════════ -->
+<div class="page" id="page-catalogue">
+  <div class="catalogue-header">
+    <h1>Nos Repas</h1>
+    <p>L'excellence culinaire à portée de clic</p>
+  </div>
+
+  <div class="search-container">
+    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    <input type="text" id="search-food" class="search-input" placeholder="Rechercher un plat (ex: Atassi...)" onkeyup="handleSearch()">
+  </div>
+
+  <div class="filter-bar" id="filter-bar"></div>
+  <div id="cat-status" style="text-align:center; padding:2rem; color:var(--or);">Chargement...</div>
+  <div class="cat-grid" id="cat-grid"></div>
+
+  <footer class="site-footer">
+    <p>© 2024 <span>Le Festin du Bénin</span> · Tous droits réservés</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════
+     PAGE : CONTACT
+═══════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-hero">
+    <h1>Nous Trouver</h1>
+    <p>Venez goûter l'authenticité à Cotonou</p>
+  </div>
+
+  <div class="contact-body">
+    <div class="contact-info">
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--brun); margin-bottom:1.5rem;">Coordonnées</h2>
+      <div class="contact-item">
+        <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <div class="contact-item-text"><strong>Adresse</strong><span>Quartier Haie Vive, Cotonou<br/>Bénin</span></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
+        <div class="contact-item-text"><strong>Téléphone</strong><span>+229 90 00 00 00<br/>+229 60 00 00 00</span></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon"><i class="fa-solid fa-envelope"></i></div>
+        <div class="contact-item-text"><strong>Email</strong><span>contact@lefestinbenin.com</span></div>
+      </div>
+    </div>
+    <div class="map-block">
+      <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.3!2d2.44!3d6.36!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjEnMzYuMCJOIDIsMjYnMjUuMCJX!5e0!3m2!1sfr!2sbj!4v1000000000000" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2024 <span>Le Festin du Bénin</span> · Tous droits réservés</p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════
+     MODAL COMMANDE
+═══════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">×</button>
+    <div class="modal-title" id="modal-name" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:700; color:var(--brun);"></div>
+    <div class="modal-price" id="modal-price" style="color:var(--or); font-weight:700; margin-bottom:1rem;"></div>
+    <div class="modal-section" style="font-size:0.7rem; color:var(--or); text-transform:uppercase; font-weight:bold; margin-bottom:1rem; border-bottom:1px solid #ddd;">📍 Livraison</div>
+    <input type="text" id="inp-nom" placeholder="Votre nom complet *"/>
+    <input type="tel" id="inp-tel" placeholder="Téléphone (+229) *"/>
+    <input type="text" id="inp-adresse" placeholder="Adresse exacte à Cotonou *"/>
+    <div class="modal-section" style="font-size:0.7rem; color:var(--or); text-transform:uppercase; font-weight:bold; margin-bottom:1rem; border-bottom:1px solid #ddd;">🍴 Détails</div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+        <label>Quantité :</label>
+        <button onclick="changeQty(-1)" style="width:30px; height:30px; border-radius:50%; border:1px solid var(--or); background:none; color:var(--or);">-</button>
+        <span id="qty-display">1</span>
+        <button onclick="changeQty(1)" style="width:30px; height:30px; border-radius:50%; border:1px solid var(--or); background:none; color:var(--or);">+</button>
+    </div>
+    <div id="total-line" style="text-align:right; color:var(--or); font-weight:bold; margin-bottom:1rem;"></div>
+    <input type="text" id="inp-note" placeholder="Remarques (ex: sans piment)"/>
+    <button class="btn-confirm" id="btn-confirm">Commander via Email</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  CONFIG & DONNÉES
+// ═══════════════════════════════════════════
+const EMAIL_TO = 'codjoviyvon@gmail.com';
+const DEMO = [
+  { nom:'Atassi Royale', categorie:'Plats', description:'Riz et haricots mélangés, servi avec poisson frit, œufs et piment noir.', prix:'3 500 FCFA', image:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80', badge:'Populaire' },
+  { nom:'Amiwo au Poulet', categorie:'Plats', description:'Pâte rouge consistante accompagnée de poulet braisé et légumes.', prix:'4 000 FCFA', image:'https://images.unsplash.com/photo-1598103442097-8b74394b95c5?w=400&q=80', badge:'' },
+  { nom:'Igname Pilée', categorie:'Plats', description:'Le classique béninois, servi avec une sauce graine onctueuse et viande.', prix:'5 000 FCFA', image:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80', badge:'Chef recommande' },
+  { nom:'Alloco & Poisson', categorie:'Entrées', description:'Bananes plantains frites et poisson braisé aux épices locales.', prix:'2 500 FCFA', image:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80', badge:'' },
+  { nom:'Jus de Bissap', categorie:'Boissons', description:'Infusion fraîche d\'hibiscus maison.', prix:'500 FCFA', image:'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80', badge:'' },
+  { nom:'Jus de Baobab', categorie:'Boissons', description:'Boisson onctueuse et nutritive au fruit du baobab.', prix:'500 FCFA', image:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80', badge:'' },
+];
+
+let allItems = DEMO;
+let activeItem = null;
+let qty = 1;
+
+// ═══════════════════════════════════════════
+//  NAVIGATION PRO
+// ═══════════════════════════════════════════
+function moveIndicator(element) {
+    const indicator = document.querySelector(".indicator");
+    indicator.style.width = element.offsetWidth + "px";
+    indicator.style.left = element.offsetLeft + "px";
+}
+
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+        const isActive = item.dataset.page === name;
+        item.classList.toggle('active', isActive);
+        if(isActive) moveIndicator(item);
+    });
+
+    if (name === 'catalogue') {
+        renderFilters();
+        renderGrid();
+        document.getElementById('cat-status').style.display = 'none';
+    }
+    window.scrollTo(0,0);
+}
+
+window.onload = () => {
+    const activeItem = document.querySelector(".nav-item.active");
+    if(activeItem) moveIndicator(activeItem);
+};
+
+// ═══════════════════════════════════════════
+//  LOGIQUE CATALOGUE & RECHERCHE
+// ═══════════════════════════════════════════
+
+  function renderFilters() {
+    const cats = ['Tous', ...new Set(allItems.map(i => i.categorie))];
+    const bar = document.getElementById('filter-bar');
+    bar.innerHTML = cats.map(c => `<button class="filter-btn ${c==='Tous'?'active':''}" onclick="filterCat('${c}', this)">${c}</button>`).join('');
+}
+
+function filterCat(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid(cat);
+}
+
+function handleSearch() {
+    const query = document.getElementById('search-food').value.toLowerCase();
+    renderGrid('Tous', query);
+}
+
+function renderGrid(cat = 'Tous', query = '') {
+    const grid = document.getElementById('cat-grid');
+    let list = allItems;
+
+    if(cat !== 'Tous') list = list.filter(i => i.categorie === cat);
+    if(query) list = list.filter(i => i.nom.toLowerCase().includes(query) || i.description.toLowerCase().includes(query));
+
+    if (!list.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem; color:var(--gris);">Aucun plat trouvé...</div>';
+        return;
+    }
+
+    grid.innerHTML = list.map(item => `
+        <div class="card">
+            <div class="card-img">
+                <img src="${item.image}" alt="${item.nom}">
+                ${item.badge ? `<span class="card-badge">${item.badge}</span>`:''}
+            </div>
+            <div class="card-body">
+                <div class="card-name">${item.nom}</div>
+                <div class="card-desc">${item.description}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem;">
+                    <span class="card-price">${item.prix}</span>
+                    <button class="btn-order" onclick="openModal('${item.nom}')">Commander</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ═══════════════════════════════════════════
+//  MODAL & COMMANDE
+// ═══════════════════════════════════════════
+function openModal(name) {
+    activeItem = allItems.find(i => i.nom === name);
+    qty = 1;
+    document.getElementById('modal-name').textContent = activeItem.nom;
+    document.getElementById('modal-price').textContent = activeItem.prix;
+    document.getElementById('qty-display').textContent = qty;
+    updateTotal();
+    document.getElementById('modal-overlay').classList.add('open');
+}
+
+function changeQty(v) {
+    qty = Math.max(1, qty + v);
+    document.getElementById('qty-display').textContent = qty;
+    updateTotal();
+}
+
+function updateTotal() {
+    const priceVal = parseInt(activeItem.prix.replace(/\s/g,'').replace(/[^0-9]/g,''));
+    document.getElementById('total-line').textContent = `Total: ${(priceVal * qty).toLocaleString()} FCFA`;
+}
+
+document.getElementById('modal-close').onclick = () => document.getElementById('modal-overlay').classList.remove('open');
+
+document.getElementById('btn-confirm').onclick = () => {
+    const nom = document.getElementById('inp-nom').value;
+    const tel = document.getElementById('inp-tel').value;
+    const adr = document.getElementById('inp-adresse').value;
+    if(!nom || !tel || !adr) return alert("Veuillez remplir les champs obligatoires");
+
+    const subject = `Commande - ${activeItem.nom} (${nom})`;
+    const body = `Nouvelle Commande Le Festin du Bénin\n\nClient: ${nom}\nTel: ${tel}\nAdresse: ${adr}\nPlat: ${activeItem.nom}\nQuantité: ${qty}\nNote: ${document.getElementById('inp-note').value}`;
+    
+    window.location.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    document.getElementById('modal-overlay').classList.remove('open');
+};
+</script>
+</body>
+</html>
